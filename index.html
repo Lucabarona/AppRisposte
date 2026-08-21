@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'App delle Risposte</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .app-container {
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            font-size: 22px;
+            color: #ffd700;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .display-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 25px 20px;
+            min-height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            transition: transform 0.5s ease-in-out;
+        }
+        .display-box.ruota {
+            transform: rotateY(360deg) scale(0.95);
+        }
+        #risposta {
+            font-size: 18px;
+            font-style: italic;
+            color: #f0f0f0;
+            line-height: 1.4;
+            opacity: 1;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        /* Classe per l'effetto magia (dissolvenza) */
+        .magia {
+            opacity: 0 !important;
+            transform: scale(0.8);
+        }
+        button {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            color: #1a1a2e;
+            border: none;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(253, 160, 133, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+        button:active {
+            transform: scale(0.96);
+            box-shadow: 0 2px 8px rgba(253, 160, 133, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <h1>L'App delle Risposte</h1>
+        <div class="display-box" id="displayBox">
+            <p id="risposta">Pensa a una domanda e premi il pulsante per rivelare il destino...</p>
+        </div>
+        <button onclick="rivelaRisposta()">Interroga l'App</button>
+    </div>
+
+    <script>
+        const frasi = [
+            "Assolutamente sì.", "Le probabilità sono a tuo favore.", "Fallo, ma non fartene una colpa.", "È il momento peggiore per farlo.", "Chiedilo a qualcun altro.",
+            "Concentrati e chiedilo di nuovo.", "Le stelle dicono di no.", "Segui il tuo istinto senza paura.", "Meglio tacere.", "Non ci contare troppo.",
+            "Sì, è scritto nel destino.", "Evita di correre rischi inutili.", "È la scelta giusta.", "Aspetta ancora un po'.", "Assolutamente no.",
+            "Fallo subito.", "C'è troppa confusione.", "Riceverai un segno.", "Dipende da te.", "Non è il momento.",
+            "Prendi tempo.", "Sì, senza dubbio.", "Prudenza.", "Cerca la semplicità.", "Un salto nel buio.",
+            "Fidati.", "Non farti condizionare.", "Sotto i tuoi occhi.", "Cambia strada.", "Pazienza.",
+            "La fortuna ti sorride.", "Niente colpi di testa.", "Chiedi a un amico.", "Momento della svolta.", "Fluisci.",
+            "Vicolo cieco.", "Sorpresa in arrivo.", "Difendi le tue idee.", "Non è la domanda giusta.", "Rimanda a domani.",
+            "Tutto procede bene.", "Rischia.", "Un'illusione.", "Tieni un piano B.", "Il destino ha già scelto.",
+            "Fai di testa tua.", "Decidi.", "Riprova più tardi.", "Sii coraggioso.", "Non temere.",
+            "La risposta è sì.", "Forse.", "Molto probabile.", "Difficile dire.", "Non è chiaro.",
+            "Segui i segni.", "Guarda altrove.", "La luce è vicina.", "Abbandona il passato.", "Scegli con cura.",
+            "La risposta giace nel silenzio.", "Fidati del tuo cuore.", "Tutto cambierà presto.", "Non perdere la speranza.", "Ogni cosa a suo tempo.",
+            "Una porta si chiude, una si apre.", "Accetta il cambiamento.", "Sei sulla strada giusta.", "Rifletti attentamente.", "Non aver fretta.",
+            "Cerca la verità dentro di te.", "Il successo è vicino.", "La via è chiara.", "Non guardare indietro.", "Un nuovo inizio.",
+            "La fortuna aiuta gli audaci.", "Attenzione ai dettagli.", "La pace sta arrivando.", "Confida nei tuoi sogni.", "Le risposte sono in te.",
+            "Sii pronto al cambiamento.", "Lascia fluire gli eventi.", "La tua forza ti guiderà.", "Ogni sfida ti rende forte.", "Il futuro è luminoso.",
+            "Non cercare lontano.", "La soluzione è semplice.", "Ogni giorno è un dono.", "Resta fedele a te stesso.", "L'amore vincerà.",
+            "La verità trionferà.", "Credi nel possibile.", "La saggezza ti guiderà.", "Tutto andrà bene.", "Un passo alla volta.",
+            "Il meglio deve venire.", "Sorridi alla vita.", "La gioia è vicina.", "Sii grato.", "Guarda oltre."
+        ];
+
+        function rivelaRisposta() {
+            const displayBox = document.getElementById("displayBox");
+            const rispostaP = document.getElementById("risposta");
+            
+            // 1. Fa svanire il testo vecchio e fa ruotare il box
+            rispostaP.classList.add('magia');
+            displayBox.classList.add('ruota');
+            
+            // Scegli una nuova frase a caso
+            const frase = frasi[Math.floor(Math.random() * frasi.length)];
+            
+            setTimeout(() => {
+                // Cambia il testo mentre è nascosto
+                rispostaP.innerText = frase;
+                
+                // Fa riapparire il testo con effetto magia (rimuovendo la classe)
+                rispostaP.classList.remove('magia');
+                displayBox.classList.remove('ruota');
+                
+                // Attiva la voce femminile che pronuncia la risposta
+                const msg = new SpeechSynthesisUtterance(frase);
+                msg.lang = 'it-IT';
+                msg.pitch = 1.2; // Tono leggermente più alto
+                msg.rate = 0.95;
+                window.speechSynthesis.speak(msg);
+                
+            }, 300); // Sincronizzato con l'animazione
+        }
+    </script>
+</body>
+</html>

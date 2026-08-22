@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'App delle Risposte Pro</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .app-container {
+            text-align: center;
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            font-size: 20px;
+            color: #ffd700;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .selector-box {
+            margin-bottom: 15px;
+        }
+        select {
+            background: rgba(0, 0, 0, 0.5);
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            width: 100%;
+        }
+        .display-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            transition: transform 0.5s ease-in-out;
+            perspective: 1000px;
+        }
+        .display-box.ruota {
+            transform: rotateY(360deg) scale(0.95);
+        }
+        
+        .moneta {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            border: 4px solid #fff;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #1a1a2e;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+            animation: giraMoneta 1s infinite linear;
+        }
+
+        @keyframes giraMoneta {
+            0% { transform: rotateY(0deg) scale(1); }
+            50% { transform: rotateY(720deg) scale(1.2); }
+            100% { transform: rotateY(1440deg) scale(1); }
+        }
+
+        #risposta {
+            font-size: 18px;
+            font-style: italic;
+            color: #f0f0f0;
+            line-height: 1.4;
+            opacity: 1;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .magia {
+            opacity: 0 !important;
+            transform: scale(0.8);
+        }
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        button {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            color: #1a1a2e;
+            border: none;
+            padding: 12px 20px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(253, 160, 133, 0.4);
+            transition: transform 0.2s;
+            width: 100%;
+        }
+        button:active {
+            transform: scale(0.96);
+        }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            box-shadow: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .badge-giorno {
+            font-size: 12px;
+            background: #ffd700;
+            color: #1a1a2e;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        /* Stile moderno per il contatore dei download esterno */
+        .downloads-badge {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            backdrop-filter: blur(5px);
+        }
+        .downloads-badge span {
+            color: #ffd700;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <h1>L'App delle Risposte</h1>
+        
+        <div class="selector-box">
+            <select id="mazzoScelto">
+                <option value="mistico">🔮 Mistico & Universale</option>
+                <option value="lavoro">💼 Lavoro & Carriera</option>
+                <option value="amore">❤️ Amore & Caos</option>
+                <option value="bastardo">🔥 Bastardo & Cinico</option>
+            </select>
+        </div>
+
+        <div id="badgeContainer"></div>
+
+        <div class="display-box" id="displayBox">
+            <p id="risposta">Pensa a una domanda e seleziona un'opzione o lancia la moneta...</p>
+        </div>
+
+        <div class="btn-group">
+            <button onclick="rivelaRisposta()">Interroga l'App</button>
+            <button onclick="lanciaMoneta()" class="btn-secondary">🪙 Lancia Testa o Croce</button>
+            <button onclick="pescaDomandaDelGiorno()" class="btn-secondary">📅 Verdetto del Giorno</button>
+            <button onclick="condividiWhatsApp()" class="btn-secondary" id="btnCondividi" style="display:none;">📤 Condividi su WhatsApp</button>
+        </div>
+    </div>
+
+    <!-- Badge dei download fuori dal riquadro -->
+    <div class="downloads-badge">
+        📥 Già scaricata da <span>1.842</span> utenti
+    </div>
+
+    <script>
+        const mazzi = {
+            mistico: [
+                "Assolutamente sì.", "Le probabilità sono a tuo favore.", "Fallo, ma non fartene una colpa.", "È il momento peggiore per farlo.", "Chiedilo a qualcun altro.",
+                "Concentrati e chiedilo di nuovo.", "Le stelle dicono di no.", "Segui il tuo istinto senza paura.", "Meglio tacere.", "Non ci contare troppo.",
+                "Sì, è scritto nel destino.", "Evita di correre rischi inutili.", "È la scelta giusta.", "Aspetta ancora un po'.", "Assolutamente no.",
+                "Fallo subito.", "C'è troppa confusione.", "Riceverai un segno.", "Dipende da te.", "Non è il momento.",
+                "Prendi tempo.", "Sì, senza dubbio.", "Prudenza.", "Cerca la semplicità.", "Un salto nel buio."
+            ],
+            lavoro: [
+                "Chiedi un aumento, è il momento giusto.", "Il capo sta osservando: datti da fare.", "Rimanda quel progetto a settimana prossima.", "Cambia lavoro prima che sia tardi.", "C'è una promozione nascosta in arrivo.",
+                "Non fidarti di quel collega.", "Investi tempo sulle tue idee.", "Delega di più e stressati meno.", "Un errore del passato ti salverà.", "Accetta quella proposta all'estero.",
+                "Il budget è rischioso, fai attenzione.", "Ottime notizie in arrivo dalla direzione.", "Fai una pausa, stai esagerando.", "Il successo richiede ancora molta gavetta.", "Segui la tua passione economica.",
+                "Tieni duro, la crisi è quasi finita.", "Cerca un socio con cui dividere il carico.", "Ottimizza i costi e taglia i rami secchi.", "Parla chiaro con i superiori.", "Un colpo di testa ti premierà.",
+                "Rimani nella tua zona di comfort per ora.", "C'è un contratto segreto che ti attende.", "Non firmare nulla a scatola chiusa.", "La tua creatività farà la differenza.", "Fidati del tuo piano aziendale."
+            ],
+            amore: [
+                "Scrivigli subito quel messaggio.", "Fatti desiderare di più.", "È la persona giusta, non avere dubbi.", "Lascialo perdere, è un buco nell'acqua.", "C'è un ritorno di fiamma in arrivo.",
+                "Troppi drammi inutili: volta pagina.", "Dille quello che provi senza filtri.", "È solo un'infatuazione passeggera.", "Organizza una sorpresa romantica.", "Meglio rimanere amici, per ora.",
+                "Il cuore ha ragione, ascoltalo.", "C'è un segreto che non ti sta dicendo.", "Fai il primo passo con coraggio.", "State marciando verso un vicolo cieco.", "La gelosia sta rovinando tutto.",
+                "Un incontro inaspettato ti sconvolgerà.", "Fidati di più del tuo partner.", "Cerca l'equilibrio prima di amare.", "Prenditi del tempo per stare da solo.", "L'amore trionferà su tutto.",
+                "Non elemosinare attenzioni.", "C'è chi ti pensa in questo istante.", "Chiudi quella porta e aprine un'altra.", "Un bacio cambierà le regole del gioco.", "Vivi alla giornata e goditi il caos."
+            ],
+            bastardo: [
+                "Ma ti rendi conto della cazzata che hai appena pensato?", "Fallo pure, così impari la lezione a tue spese.", "La risposta è no, a meno che tu non voglia umiliarti.", "Anche no, svegliati.", "Hai due neuroni in lotta per il terzo posto.",
+                "Chiedilo a tua madre, magari lei ti sopporta.", "Certo, buttati nel fosso che è morbido.", "Ma fatti una vita invece di fare ste domande.", "Pessima idea, come tutte le tue idee del resto.", "Sei talmente fuori strada che ti serve un navigatore.",
+                "Ma ti sei guardato allo specchio stamattina?", "Nessuno ti sta ascoltando, rassegnati.", "Sì, vai a sbattere contro il muro, ti farà bene.", "Hai la stessa probabilità di successo di un pinguino nel Sahara.", "Ma chi te lo fa fare di fare figuracce?",
+                "La risposta è ovvia, ma sei troppo cieco per vederla.", "Fallo pure, poi però non venire a piangere da me.", "Sei il re indiscusso delle decisioni idiote.", "Ma piantala e vai a dormire.", "Le tue speranze sono meno di zero.",
+                "Ti meriti esattamente quello che ti succederà per aver fatto questa domanda.", "Ma per favore, cresci un attimo.", "Sei a un passo dal fare una figura colossale.", "Risposta breve: no. Risposta lunga: assolutamente no.", "Ma ti pagano per essere così pesante?"
+            ]
+        };
+
+        let ultimaRispostaTesto = "";
+
+        function rivelaRisposta() {
+            const categoriaScelta = document.getElementById("mazzoScelto").value;
+            const arrayFrasi = mazzi[categoriaScelta];
+            
+            document.getElementById("badgeContainer").innerHTML = ""; 
+            animazioneMagia();
+            
+            const frase = arrayFrasi[Math.floor(Math.random() * arrayFrasi.length)];
+            mostraRisposta(frase);
+        }
+
+        function lanciaMoneta() {
+            document.getElementById("badgeContainer").innerHTML = '<span class="badge-giorno">🪙 Lancio della Moneta 🪙</span>';
+            const rispostaP = document.getElementById("risposta");
+            
+            rispostaP.innerHTML = '<div class="moneta">€</div>';
+            document.getElementById("btnCondividi").style.display = "none";
+
+            setTimeout(() => {
+                const esito = Math.random() < 0.5 ? "Testa!" : "Croce!";
+                mostraRisposta(esito);
+            }, 1200);
+        }
+
+        function pescaDomandaDelGiorno() {
+            const oggi = new Date().toDateString();
+            const salvatoData = localStorage.getItem("dataVerdetto");
+            const salvatoTesto = localStorage.getItem("testoVerdetto");
+
+            let frase = "";
+
+            if (salvatoData === oggi && salvatoTesto) {
+                frase = salvatoTesto;
+            } else {
+                const arrayFrasi = mazzi.mistico;
+                frase = arrayFrasi[Math.floor(Math.random() * arrayFrasi.length)];
+                localStorage.setItem("dataVerdetto", oggi);
+                localStorage.setItem("testoVerdetto", frase);
+            }
+
+            document.getElementById("badgeContainer").innerHTML = '<span class="badge-giorno">✨ Il Verdetto del Giorno ✨</span>';
+            
+            animazioneMagia();
+            mostraRisposta(frase);
+        }
+
+        function animazioneMagia() {
+            const displayBox = document.getElementById("displayBox");
+            const rispostaP = document.getElementById("risposta");
+            rispostaP.classList.add('magia');
+            displayBox.classList.add('ruota');
+        }
+
+        function mostraRisposta(frase) {
+            ultimaRispostaTesto = frase;
+            setTimeout(() => {
+                const rispostaP = document.getElementById("risposta");
+                const displayBox = document.getElementById("displayBox");
+                
+                rispostaP.innerText = frase;
+                rispostaP.classList.remove('magia');
+                displayBox.classList.remove('ruota');
+                
+                document.getElementById("btnCondividi").style.display = "block";
+
+                const msg = new SpeechSynthesisUtterance(frase);
+                msg.lang = 'it-IT';
+                msg.pitch = 1.2;
+                msg.rate = 0.95;
+                window.speechSynthesis.speak(msg);
+                
+            }, 300);
+        }
+
+        function condividiWhatsApp() {
+            const testoMessaggio = encodeURIComponent(`🔥 L'App delle Risposte ha emesso il verdetto:\n\n"${ultimaRispostaTesto}"\n\nTenta la fortuna anche tu!`);
+            window.open(`https://api.whatsapp.com/send?text=${testoMessaggio}`, '_blank');
+        }
+    </script>
+</body>
+</html>

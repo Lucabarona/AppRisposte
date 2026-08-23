@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interpreta il tuo Destino</title>
+    <style>
+        body {
+            background: radial-gradient(circle at center, #11223f 0%, #050b14 100%);
+            color: #f0f4f8;
+            font-family: 'Cinzel', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Stelline di sfondo */
+        body::before {
+            content: "✦";
+            position: absolute;
+            top: 10%;
+            left: 15%;
+            font-size: 12px;
+            color: #fff;
+            opacity: 0.6;
+            animation: sfavella 3s infinite alternate;
+        }
+        body::after {
+            content: "✦";
+            position: absolute;
+            bottom: 15%;
+            right: 20%;
+            font-size: 14px;
+            color: #ffd700;
+            opacity: 0.5;
+            animation: sfavella 4s infinite alternate;
+        }
+
+        @keyframes sfavella {
+            0% { transform: scale(0.7); opacity: 0.3; }
+            100% { transform: scale(1.3); opacity: 0.9; text-shadow: 0 0 10px #fff; }
+        }
+
+        .app-container {
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            background: rgba(10, 20, 35, 0.85);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(138, 180, 248, 0.3);
+            border-radius: 24px;
+            padding: 30px 20px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.85);
+            position: relative;
+        }
+
+        h1 {
+            font-size: 20px;
+            color: #e2e8f0;
+            margin-bottom: 5px;
+            letter-spacing: 1.5px;
+            font-weight: 500;
+        }
+
+        .sottotitolo {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .selector-box {
+            margin-bottom: 15px;
+        }
+        select {
+            background: rgba(15, 28, 48, 0.95);
+            color: #e2e8f0;
+            border: 1px solid rgba(138, 180, 248, 0.4);
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            outline: none;
+            width: 100%;
+            font-weight: 500;
+        }
+
+        /* CONTENITORE PORTALE CON IL VERO FUMO (GIF) */
+        .portale-fumo-box {
+            position: relative;
+            width: 100%;
+            height: 210px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(138, 180, 248, 0.2);
+            background: #040914;
+        }
+
+        /* Immagine / GIF animata del fumo */
+        .portale-fumo-box img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.75;
+            mix-blend-mode: screen; /* Fa fondere il fumo con lo sfondo in modo magico */
+        }
+
+        /* Testo della risposta che si sovrappone al fumo */
+        .risposta-wrapper {
+            position: relative;
+            z-index: 2;
+            padding: 0 20px;
+            background: rgba(4, 9, 20, 0.45);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(2px);
+        }
+
+        #risposta {
+            font-size: 17px;
+            font-style: italic;
+            color: #ffffff;
+            line-height: 1.4;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.8), 0 2px 4px rgba(0,0,0,0.9);
+            font-weight: 600;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        button, .btn-link {
+            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+            color: #ffffff;
+            border: none;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(56, 189, 248, 0.35);
+            transition: transform 0.2s, filter 0.2s;
+            width: 100%;
+            text-decoration: none;
+            display: inline-block;
+            box-sizing: border-box;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        button:hover, .btn-link:hover {
+            filter: brightness(1.1);
+        }
+        button:active, .btn-link:active {
+            transform: scale(0.96);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: #cbd5e1;
+            box-shadow: none;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .btn-stripe {
+            background: linear-gradient(135deg, #635bff, #00d4ff);
+            color: #ffffff;
+            box-shadow: 0 5px 20px rgba(99, 91, 255, 0.4);
+        }
+
+        .badge-giorno {
+            font-size: 11px;
+            background: rgba(56, 189, 248, 0.2);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .sezione-codice {
+            margin-top: 10px;
+            background: rgba(15, 28, 48, 0.8);
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px dashed rgba(56, 189, 248, 0.4);
+        }
+        .sezione-codice input {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            padding: 9px;
+            color: #fff;
+            border-radius: 8px;
+            width: 65%;
+            font-size: 13px;
+            outline: none;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .sezione-codice button {
+            width: 30%;
+            padding: 9px 5px;
+            font-size: 12px;
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: none;
+        }
+
+        .downloads-badge {
+            margin-top: 25px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 12px;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .downloads-badge span {
+            color: #38bdf8;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <h1>Interpreta il tuo Destino</h1>
+        <div class="sottotitolo">~ Portale Mistico ~</div>
+        
+        <div class="selector-box">
+            <select id="mazzoScelto">
+                <option value="mistico">🔮 Mistico & Universale</option>
+                <option value="lavoro">💼 Lavoro & Carriera</option>
+                <option value="amore">❤️ Amore & Caos</option>
+                <option value="bastardo">🔥 Bastardo & Cinico</option>
+            </select>
+        </div>
+
+        <div id="badgeContainer"></div>
+
+        <!-- PORTALE CON VERO FUMO ANIMATO (GIF) -->
+        <div class="portale-fumo-box">
+            <img src="https://i.giphy.com/media/l0HlRnAWXxn0MhOBK/giphy.webp" alt="Fumo Mistico">
+            <div class="risposta-wrapper">
+                <p id="risposta">Hai 2 consultazioni gratuite. Pensa intensamente al tuo quesito...</p>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <div id="contenitoreBottoniApp">
+                <button onclick="rivelaRisposta()" style="margin-bottom: 10px;">✨ Evoca la Risposta</button>
+                <button onclick="lanciaMoneta()" class="btn-secondary" style="margin-bottom: 10px;">🪙 Lancia il Destino (Testa/Croce)</button>
+                <button onclick="pescaDomandaDelGiorno()" class="btn-secondary">📅 Verdetto del Giorno</button>
+            </div>
+            
+            <!-- Pulsante Stripe -->
+            <a href="https://buy.stripe.com/4gM00k0ao2pz0v41tQ0VO02" target="_blank" class="btn-link btn-stripe" id="btnStripe" style="display:none;">💳 Sblocca Accesso Illimitato (1,00 €)</a>
+
+            <!-- Casella Codice -->
+            <div class="sezione-codice" id="sezioneCodice" style="display:none;">
+                <input type="text" id="inputCodice" placeholder="Codice Pro">
+                <button onclick="riscattaCodice()">Attiva</button>
+            </div>
+
+            <!-- Stato Pro -->
+            <div id="statusVip" style="display:none; color: #38bdf8; font-size: 13px; font-weight: bold; margin: 5px 0; text-transform: uppercase;">✨ Portale Illimitato Attivo ✨</div>
+
+            <button onclick="condividiWhatsApp()" class="btn-secondary" id="btnCondividi" style="display:none;">📤 Condividi su WhatsApp</button>
+        </div>
+    </div>
+
+    <!-- Badge download -->
+    <div class="downloads-badge">
+        📥 Già consultato da <span id="numDownload">1842</span> anime
+    </div>
+
+    <script>
+        const codiciProValidi = [
+            "PRO-7741", "PRO-9923", "PRO-5510", "PRO-3382", "PRO-1149",
+            "PRO-8856", "PRO-2237", "PRO-6690", "PRO-4415", "PRO-0098",
+            "PRO-1357", "PRO-2468", "PRO-3579", "PRO-4680", "PRO-5791",
+            "PRO-6802", "PRO-7913", "PRO-8024", "PRO-9135", "PRO-2026"
+        ];
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('vip') === 'lucasegreto' || localStorage.getItem("appProAttivo") === "true") {
+            localStorage.setItem("appProAttivo", "true");
+        }
+
+        function haAccessoPro() {
+            return localStorage.getItem("appProAttivo") === "true";
+        }
+
+        function getGiriGratis() {
+            let giri = localStorage.getItem("giriGratisRimasti");
+            if (giri === null) return 2;
+            return parseInt(giri);
+        }
+
+        function scalaUnGiro() {
+            let giri = getGiriGratis();
+            if (giri > 0) {
+                localStorage.setItem("giriGratisRimasti", giri - 1);
+            }
+        }
+
+        window.onload = function() {
+            if (haAccessoPro()) {
+                document.getElementById("statusVip").style.display = "block";
+            } else {
+                let giri = getGiriGratis();
+                if (giri <= 0) {
+                    bloccaAppPerPagamento();
+                } else {
+                    document.getElementById("risposta").innerText = `Hai ${giri} consultazioni gratuite rimaste nel portale...`;
+                }
+            }
+        };
+
+        function bloccaAppPerPagamento() {
+            document.getElementById("contenitoreBottoniApp").style.display = "none";
+            document.getElementById("btnStripe").style.display = "block";
+            document.getElementById("sezioneCodice").style.display = "block";
+            document.getElementById("risposta").innerText = "🔒 Il portale si è chiuso. Sblocca l'accesso illimitato per 1,00 € o inserisci il codice.";
+        }
+
+        function riscattaCodice() {
+            let codiceInserito = document.getElementById("inputCodice").value.trim().toUpperCase();
+            if (codiciProValidi.includes(codiceInserito)) {
+                localStorage.setItem("appProAttivo", "true");
+                alert("Codice valido! Il portale si è aperto per sempre.");
+                location.reload();
+            } else {
+                alert("Codice non valido. Controlla la ricevuta di Stripe!");
+            }
+        }
+
+        function verificaPrimaDiAgire() {
+            if (haAccessoPro()) return true;
+            let giri = getGiriGratis();
+            if (giri > 0) {
+                scalaUnGiro();
+                return true;
+            } else {
+                bloccaAppPerPagamento();
+                return false;
+            }
+        }
+
+        let downloadTotali = localStorage.getItem("appDownloadCount");
+        if (!downloadTotali) {
+            downloadTotali = 1842;
+        } else {
+            downloadTotali = parseInt(downloadTotali) + Math.floor(Math.random() * 3) + 1;
+        }
+        localStorage.setItem("appDownloadCount", downloadTotali);
+        document.getElementById("numDownload").innerText = downloadTotali.toLocaleString();
+
+        const mazzi = {
+            mistico: [
+                "Assolutamente sì.", "Le probabilità sono a tuo favore.", "Fallo, ma non fartene una colpa.", "È il momento peggiore per farlo.", "Chiedilo a qualcun altro.",
+                "Concentrati e chiedilo di nuovo.", "Le stelle dicono di no.", "Segui il tuo istinto senza paura.", "Meglio tacere.", "Non ci contare troppo.",
+                "Sì, è scritto nel destino.", "Evita di correre rischi inutili.", "È la scelta giusta.", "Aspetta ancora un po'.", "Assolutamente no.",
+                "Fallo subito.", "C'è troppa confusione.", "Riceverai un segno.", "Dipende da te.", "Non è il momento.",
+                "Prendi tempo.", "Sì, senza dubbio.", "Prudenza.", "Cerca la semplicità.", "Un salto nel buio."
+            ],
+            lavoro: [
+                "Chiedi un aumento, è il momento giusto.", "Il capo sta osservando: datti da fare.", "Rimanda quel progetto a settimana prossima.", "Cambia lavoro prima che sia tardi.", "C'è una promozione nascosta in arrivo.",
+                "Non fidarti di quel collega.", "Investi tempo sulle tue idee.", "Delega di più e stressati meno.", "Un errore del passato ti salverà.", "Accetta quella proposta all'estero.",
+                "Il budget è rischioso, fai attenzione.", "Ottime notizie in arrivo dalla direzione.", "Fai una pausa, stai esagerando.", "Il successo richiede ancora molta gavetta.", "Segui la tua passione economica.",
+                "Tieni duro, la crisi è quasi finita.", "Cerca un socio con cui dividere il carico.", "Ottimizza i costi e taglia i rami secchi.", "Parla chiaro con i superiori.", "Un colpo di testa ti premierà.",
+                "Rimani nella tua zona di comfort per ora.", "C'è un contratto segreto che ti attende.", "Non firmare nulla a scatola chiusa.", "La tua creatività farà la differenza.", "Fidati del tuo piano aziendale."
+            ],
+            amore: [
+                "Scrivigli subito quel messaggio.", "Fatti desiderare di più.", "È la persona giusta, non avere dubbi.", "Lascialo perdere, è un buco nell'acqua.", "C'è un ritorno di fiamma in arrivo.",
+                "Troppi drammi inutili: volta pagina.", "Dille quello che provi senza filtri.", "È solo un'infatuazione passeggera.", "Organizza una sorpresa romantica.", "Meglio rimanere amici, per ora.",
+                "Il cuore ha ragione, ascoltalo.", "C'è un segreto che non ti sta dicendo.", "Fai il primo passo con coraggio.", "State marciando verso un vicolo cieco.", "La gelosia sta rovinando tutto.",
+                "Un incontro inaspettato ti sconvolgerà.", "Fidati di più del tuo partner.", "Cerca l'equilibrio prima di amare.", "Prenditi del tempo per stare da solo.", "L'amore trionferà su tutto.",
+                "Non elemosinare attenzioni.", "C'è chi ti pensa in questo istante.", "Chiudi quella porta e aprine un'altra.", "Un bacio cambierà le regole del gioco.", "Vivi alla giornata e goditi il caos."
+            ],
+            bastardo: [
+                "Ma ti rendi conto della cazzata che hai appena pensato?", "Fallo pure, così impari la lezione a tue spese.", "La risposta è no, a meno che tu non voglia umiliarti.", "Anche no, svegliati.", "Hai due neuroni in lotta per il terzo posto.",
+                "Chiedilo a tua madre, magari lei ti sopporta.", "Certo, buttati nel fosso che è morbido.", "Ma fatti una vita invece di fare ste domande.", "Pessima idea, come tutte le tue idee del resto.", "Sei talmente fuori strada che ti serve un navigatore.",
+                "Ma ti sei guardato allo specchio stamattina?", "Nessuno ti sta ascoltando, rassegnati.", "Sì, vai a sbattere contro il muro, ti farà bene.", "Hai la stessa probabilità di successo di un pinguino nel Sahara.", "Ma chi te lo fa fare di fare figuracce?",
+                "La risposta è ovvia, ma sei troppo cieco per vederla.", "Fallo pure, poi però non venire a piangere da me.", "Sei il re indiscusso delle decisioni idiote.", "Ma piantala e vai a dormire.", "Le tue speranze sono meno di zero.",
+                "Ti meriti esattamente quello che ti succederà per aver fatto questa domanda.", "Ma per favore, cresci un attimo.", "Sei a un passo dal fare una figura colossale.", "Risposta breve: no. Risposta lunga: assolutamente no.", "Ma ti pagano per essere così pesante?"
+            ]
+        };
+
+        let ultimaRispostaTesto = "";
+
+        function rivelaRisposta() {
+            if (!verificaPrimaDiAgire()) return;
+            const categoriaScelta = document.getElementById("mazzoScelto").value;
+            const arrayFrasi = mazzi[categoriaScelta];
+            
+            document.getElementById("badgeContainer").innerHTML = ""; 
+            const frase = arrayFrasi[Math.floor(Math.random() * arrayFrasi.length)];
+            mostraRisposta(frase);
+        }
+
+        function lanciaMoneta() {
+            if (!verificaPrimaDiAgire()) return;
+            document.getElementById("badgeContainer").innerHTML = '<span class="badge-giorno">🪙 Il Verdetto della Moneta 🪙</span>';
+            
+            setTimeout(() => {
+                const esito = Math.random() < 0.5 ? "Testa! Il fato ha scelto." : "Croce! Le nebbie si oppongono.";
+                mostraRisposta(esito);
+            }, 300);
+        }
+
+        function pescaDomandaDelGiorno() {
+            if (!verificaPrimaDiAgire()) return;
+            const oggi = new Date().toDateString();
+            const salvatoData = localStorage.getItem("dataVerdetto");
+            const salvatoTesto = localStorage.getItem("testoVerdetto");
+            let frase = "";
+            
+            if (salvatoData === oggi && salvatoTesto) {
+                frase = salvatoTesto;
+            } else {
+                const arrayFrasi = mazzi.mistico;
+                frase = arrayFrasi[Math.floor(Math.random() * arrayFrasi.length)];
+                localStorage.setItem("dataVerdetto", oggi);
+                localStorage.setItem("testoVerdetto", frase);
+            }
+            document.getElementById("badgeContainer").innerHTML = '<span class="badge-giorno">✨ Verdetto del Giorno ✨</span>';
+            
+            mostraRisposta(frase);
+        }
+
+        function mostraRisposta(frase) {
+            ultimaRispostaTesto = frase;
+            const rispostaP = document.getElementById("risposta");
+            rispostaP.innerText = frase;
+            document.getElementById("btnCondividi").style.display = "block";
+
+            const msg = new SpeechSynthesisUtterance(frase);
+            msg.lang = 'it-IT';
+            msg.pitch = 1.0;
+            msg.rate = 0.95;
+            window.speechSynthesis.speak(msg);
+        }
+
+        function condividiWhatsApp() {
+            const testoMessaggio = encodeURIComponent(`🔮 Il Portale Mistico ha emesso il verdetto:\n\n"${ultimaRispostaTesto}"\n\nInterpreta anche tu il tuo destino!`);
+            window.open(`https://api.whatsapp.com/send?text=${testoMessaggio}`, '_blank');
+        }
+    </script>
+</body>
+</html>
